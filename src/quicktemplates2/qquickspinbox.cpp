@@ -197,7 +197,7 @@ void QQuickSpinBoxPrivate::updateValue()
             } else {
                 val = locale.toInt(text.toString());
             }
-            setValue(val, /* modified = */ true, /* allowWrap = */ false);
+            setValue(val, /* allowWrap = */ false, /* modified = */ true);
         }
     }
 }
