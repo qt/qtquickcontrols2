@@ -267,6 +267,7 @@ void QQuickLabel::componentComplete()
     Q_D(QQuickLabel);
     d->executeBackground(true);
     QQuickText::componentComplete();
+    d->resizeBackground();
 #if QT_CONFIG(accessibility)
     if (!d->accessibleAttached && QAccessible::isActive())
         d->accessibilityActiveChanged(true);
