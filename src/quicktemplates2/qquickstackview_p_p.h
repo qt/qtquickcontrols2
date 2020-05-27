@@ -72,6 +72,7 @@ public:
     }
 
     void warn(const QString &error);
+    void warnOfInterruption(const QString &attemptedOperation);
 
     void setCurrentItem(QQuickStackElement *element);
 
@@ -93,7 +94,7 @@ public:
     void depthChange(int newDepth, int oldDepth);
 
     bool busy = false;
-    bool removingElements = false;
+    bool modifyingElements = false;
     QString operation;
     QJSValue initialItem;
     QQuickItem *currentItem = nullptr;
