@@ -106,6 +106,7 @@ private slots:
 void tst_QQuickMenu::defaults()
 {
     QQuickApplicationHelper helper(this, QLatin1String("applicationwindow.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickMenu *emptyMenu = helper.appWindow->property("emptyMenu").value<QQuickMenu*>();
     QCOMPARE(emptyMenu->isVisible(), false);
@@ -117,6 +118,7 @@ void tst_QQuickMenu::defaults()
 void tst_QQuickMenu::count()
 {
     QQuickApplicationHelper helper(this, QLatin1String("applicationwindow.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickMenu *menu = helper.window->property("emptyMenu").value<QQuickMenu*>();
     QVERIFY(menu);
@@ -149,6 +151,7 @@ void tst_QQuickMenu::mouse()
         QSKIP("Mouse hovering not functional on offscreen/minimal platforms");
 
     QQuickApplicationHelper helper(this, QLatin1String("applicationwindow.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
@@ -244,6 +247,7 @@ void tst_QQuickMenu::mouse()
 void tst_QQuickMenu::pressAndHold()
 {
     QQuickApplicationHelper helper(this, QLatin1String("pressAndHold.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickWindow *window = helper.window;
     window->show();
@@ -268,6 +272,7 @@ void tst_QQuickMenu::contextMenuKeyboard()
         QSKIP("This platform only allows tab focus for text controls");
 
     QQuickApplicationHelper helper(this, QLatin1String("applicationwindow.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
@@ -451,6 +456,7 @@ void tst_QQuickMenu::disabledMenuItemKeyNavigation()
         QSKIP("This platform only allows tab focus for text controls");
 
     QQuickApplicationHelper helper(this, QLatin1String("disabledMenuItemKeyNavigation.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
@@ -515,6 +521,7 @@ void tst_QQuickMenu::mnemonics()
 #endif
 
     QQuickApplicationHelper helper(this, QLatin1String("mnemonics.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickWindow *window = helper.window;
     window->show();
@@ -562,6 +569,7 @@ void tst_QQuickMenu::menuButton()
         QSKIP("This platform only allows tab focus for text controls");
 
     QQuickApplicationHelper helper(this, QLatin1String("applicationwindow.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
 
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
@@ -588,6 +596,7 @@ void tst_QQuickMenu::menuButton()
 void tst_QQuickMenu::addItem()
 {
     QQuickApplicationHelper helper(this, QLatin1String("addItem.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -609,6 +618,7 @@ void tst_QQuickMenu::addItem()
 void tst_QQuickMenu::menuSeparator()
 {
     QQuickApplicationHelper helper(this, QLatin1String("menuSeparator.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -686,6 +696,7 @@ void tst_QQuickMenu::menuSeparator()
 void tst_QQuickMenu::repeater()
 {
     QQuickApplicationHelper helper(this, QLatin1String("repeater.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -730,6 +741,7 @@ void tst_QQuickMenu::repeater()
 void tst_QQuickMenu::order()
 {
     QQuickApplicationHelper helper(this, QLatin1String("order.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -751,6 +763,7 @@ void tst_QQuickMenu::order()
 void tst_QQuickMenu::popup()
 {
     QQuickApplicationHelper helper(this, QLatin1String("popup.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -907,6 +920,7 @@ void tst_QQuickMenu::popup()
 void tst_QQuickMenu::actions()
 {
     QQuickApplicationHelper helper(this, QLatin1String("actions.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -975,6 +989,7 @@ void tst_QQuickMenu::actions()
 void tst_QQuickMenu::removeTakeItem()
 {
     QQuickApplicationHelper helper(this, QLatin1String("removeTakeItem.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1038,6 +1053,7 @@ void tst_QQuickMenu::subMenuMouse()
     QFETCH(bool, cascade);
 
     QQuickApplicationHelper helper(this, QLatin1String("subMenus.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -1144,6 +1160,7 @@ void tst_QQuickMenu::subMenuDisabledMouse()
     QFETCH(bool, cascade);
 
     QQuickApplicationHelper helper(this, QLatin1String("subMenuDisabled.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -1206,6 +1223,7 @@ void tst_QQuickMenu::subMenuKeyboard()
     QFETCH(bool, mirrored);
 
     QQuickApplicationHelper helper(this, QLatin1String("subMenus.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -1328,6 +1346,7 @@ void tst_QQuickMenu::subMenuDisabledKeyboard()
     QFETCH(bool, mirrored);
 
     QQuickApplicationHelper helper(this, QLatin1String("subMenuDisabled.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     centerOnScreen(window);
     moveMouseAway(window);
@@ -1404,6 +1423,7 @@ void tst_QQuickMenu::subMenuPosition()
     QFETCH(qreal, overlap);
 
     QQuickApplicationHelper helper(this, QLatin1String("subMenus.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
 
     // Ensure that the default size of the window fits three menus side by side.
@@ -1525,6 +1545,7 @@ void tst_QQuickMenu::subMenuPosition()
 void tst_QQuickMenu::addRemoveSubMenus()
 {
     QQuickApplicationHelper helper(this, QLatin1String("subMenus.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1595,6 +1616,7 @@ void tst_QQuickMenu::scrollable()
     QFETCH(QString, qmlFilePath);
 
     QQuickApplicationHelper helper(this, qmlFilePath);
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1634,6 +1656,7 @@ void tst_QQuickMenu::disableWhenTriggered()
     QFETCH(int, subMenuItemIndex);
 
     QQuickApplicationHelper helper(this, QLatin1String("disableWhenTriggered.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickWindow *window = helper.window;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1689,6 +1712,7 @@ void tst_QQuickMenu::menuItemWidth()
     QFETCH(bool, mirrored);
 
     QQuickApplicationHelper helper(this, QLatin1String("menuItemWidths.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1717,6 +1741,7 @@ void tst_QQuickMenu::menuItemWidthAfterMenuWidthChanged()
     QFETCH(bool, mirrored);
 
     QQuickApplicationHelper helper(this, QLatin1String("menuItemWidths.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1761,6 +1786,7 @@ void tst_QQuickMenu::menuItemWidthAfterImplicitWidthChanged()
     QFETCH(bool, mirrored);
 
     QQuickApplicationHelper helper(this, QLatin1String("menuItemWidths.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
@@ -1791,6 +1817,7 @@ void tst_QQuickMenu::menuItemWidthAfterImplicitWidthChanged()
 void tst_QQuickMenu::menuItemWidthAfterRetranslate()
 {
     QQuickApplicationHelper helper(this, QLatin1String("menuItemWidths.qml"));
+    QVERIFY2(helper.ready, helper.failureMessage());
     QQuickApplicationWindow *window = helper.appWindow;
     window->show();
     QVERIFY(QTest::qWaitForWindowActive(window));
