@@ -91,6 +91,7 @@ private slots:
     void disabledParentPalette();
     void toolTipCrashOnClose();
     void setOverlayParentToNull();
+    void centerInOverlayWithinStackViewItem();
 };
 
 void tst_QQuickPopup::initTestCase()
@@ -1280,6 +1281,22 @@ void tst_QQuickPopup::setOverlayParentToNull()
 
     QVERIFY(window->close());
     // While nullifying the overlay parent doesn't make much sense, it shouldn't crash.
+}
+
+void tst_QQuickPopup::centerInOverlayWithinStackViewItem()
+{
+    QQuickApplicationHelper helper(this, "centerInOverlayWithinStackViewItem.qml");
+    QVERIFY2(helper.ready, helper.failureMessage());
+
+    QQuickWindow *window = helper.window;
+    window->show();
+    QVERIFY(QTest::qWaitForWindowExposed(window));
+
+    QQuickPopup *popup = window->property("popup").value<QQuickPopup*>();
+    QVERIFY(popup);
+    QTRY_COMPARE(popup->isVisible(), true);
+
+    // Shouldn't crash on exit.
 }
 
 QTEST_QUICKCONTROLS_MAIN(tst_QQuickPopup)
