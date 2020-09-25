@@ -216,8 +216,12 @@ public:
 
 QQuickMenuPrivate::QQuickMenuPrivate()
 {
-    Q_Q(QQuickMenu);
     cascade = shouldCascade();
+}
+
+void QQuickMenuPrivate::init()
+{
+    Q_Q(QQuickMenu);
     contentModel = new QQmlObjectModel(q);
 }
 
@@ -721,6 +725,7 @@ QQuickMenu::QQuickMenu(QObject *parent)
 {
     Q_D(QQuickMenu);
     setFocus(true);
+    d->init();
     connect(d->contentModel, &QQmlObjectModel::countChanged, this, &QQuickMenu::countChanged);
 }
 
