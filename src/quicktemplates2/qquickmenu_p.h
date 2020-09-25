@@ -76,6 +76,7 @@ class Q_QUICKTEMPLATES2_PRIVATE_EXPORT QQuickMenu : public QQuickPopup
 
 public:
     explicit QQuickMenu(QObject *parent = nullptr);
+    ~QQuickMenu();
 
     Q_INVOKABLE QQuickItem *itemAt(int index) const;
     Q_INVOKABLE void addItem(QQuickItem *item);
