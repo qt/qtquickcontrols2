@@ -438,6 +438,7 @@ QQuickAbstractButton::QQuickAbstractButton(QQuickItem *parent)
     setActiveFocusOnTab(true);
     setFocusPolicy(Qt::StrongFocus);
     setAcceptedMouseButtons(Qt::LeftButton);
+    setAcceptTouchEvents(true);
 #if QT_CONFIG(cursor)
     setCursor(Qt::ArrowCursor);
 #endif
@@ -449,6 +450,7 @@ QQuickAbstractButton::QQuickAbstractButton(QQuickAbstractButtonPrivate &dd, QQui
     setActiveFocusOnTab(true);
     setFocusPolicy(Qt::StrongFocus);
     setAcceptedMouseButtons(Qt::LeftButton);
+    setAcceptTouchEvents(true);
 #if QT_CONFIG(cursor)
     setCursor(Qt::ArrowCursor);
 #endif
