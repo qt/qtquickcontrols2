@@ -1052,7 +1052,7 @@ void QQuickAbstractButton::keyReleaseEvent(QKeyEvent *event)
 {
     Q_D(QQuickAbstractButton);
     QQuickControl::keyReleaseEvent(event);
-    if (d->acceptKeyClick(static_cast<Qt::Key>(event->key()))) {
+    if (d->pressed && d->acceptKeyClick(static_cast<Qt::Key>(event->key()))) {
         setPressed(false);
 
         nextCheckState();
