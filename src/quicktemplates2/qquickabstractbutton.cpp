@@ -736,7 +736,6 @@ void QQuickAbstractButton::setIndicator(QQuickItem *indicator)
 }
 
 /*!
-    \qmlpropertygroup QtQuick.Controls::AbstractButton::icon
     \qmlproperty string QtQuick.Controls::AbstractButton::icon.name
     \qmlproperty url QtQuick.Controls::AbstractButton::icon.source
     \qmlproperty int QtQuick.Controls::AbstractButton::icon.width
