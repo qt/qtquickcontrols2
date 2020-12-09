@@ -33,7 +33,13 @@ target_link_libraries(wearable PUBLIC
     Qt::Quick
     Qt::QuickControls2
 )
-
+# special case begin
+if(UNIX AND NOT APPLE AND CMAKE_CROSSCOMPILING)
+    find_package(Qt6 COMPONENTS QuickTemplates2)
+     # Work around QTBUG-86533
+    target_link_libraries(wearable PRIVATE Qt::QuickTemplates2)
+endif()
+# special case end
 
 # Resources:
 set(wearable_resource_files
