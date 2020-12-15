@@ -284,6 +284,7 @@ private:
     DirtyFlags m_dirty = Everything;
     bool m_useNinePatchImage = true;
     bool m_polishing = false;
+    mutable QQuickWindow *m_connectedWindow = nullptr;
 
 #ifdef Q_OS_MACOS
     int m_transitionDuration = 150;
