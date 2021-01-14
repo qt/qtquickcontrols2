@@ -142,6 +142,8 @@ private:
 QtQuickTemplates2Plugin::QtQuickTemplates2Plugin(QObject *parent)
     : QQmlExtensionPlugin(parent), registered(false)
 {
+    volatile auto initialization = &QQuickTemplates_initializeModule;
+    Q_UNUSED(initialization)
 #if QT_CONFIG(shortcut)
     originalContextMatcher = qt_quick_shortcut_context_matcher();
     qt_quick_set_shortcut_context_matcher(QQuickShortcutContext::matcher);
