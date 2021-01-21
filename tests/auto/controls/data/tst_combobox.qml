@@ -1497,7 +1497,7 @@ TestCase {
         control.editText = ""
         compare(control.acceptableInput, true)
         control.editText = ""
-        control.forceActiveFocus()
+        control.contentItem.forceActiveFocus()
         keyPress(Qt.Key_A)
         compare(control.editText, "")
         keyPress(Qt.Key_A)
@@ -1534,7 +1534,7 @@ TestCase {
 
         compare(control.currentIndex, 0)
         compare(control.currentText, "first")
-        control.forceActiveFocus()
+        control.contentItem.forceActiveFocus()
         compare(control.activeFocus, true)
 
         control.selectAll()
@@ -1557,7 +1557,7 @@ TestCase {
         var control = createTemporaryObject(comboBox, testCase, {editable: true, model: ["Banana", "Coco", "Coconut", "Apple", "Cocomuffin"]})
         verify(control)
 
-        control.forceActiveFocus()
+        control.contentItem.forceActiveFocus()
         verify(control.activeFocus)
 
         var acceptCount = 0
@@ -1708,7 +1708,7 @@ TestCase {
         var control = createTemporaryObject(keysAttachedBox, testCase)
         verify(control)
 
-        control.forceActiveFocus()
+        control.contentItem.forceActiveFocus()
         verify(control.activeFocus)
 
         verify(!control.gotit)
@@ -1963,7 +1963,7 @@ TestCase {
 
         // Give the first ComboBox focus and type in 0 to select "Item 10" (default is "Item 1").
         waitForRendering(comboBox1)
-        comboBox1.forceActiveFocus()
+        comboBox1.contentItem.forceActiveFocus()
         verify(comboBox1.activeFocus)
         keyClick(Qt.Key_0)
         compare(comboBox1.editText, "Item 10")
@@ -1981,7 +1981,7 @@ TestCase {
 
         // Give focus back to the first ComboBox, and try the same thing except
         // with non-existing text; the currentIndex should not change.
-        comboBox1.forceActiveFocus()
+        comboBox1.contentItem.forceActiveFocus()
         verify(comboBox1.activeFocus)
         keySequence(StandardKey.SelectAll)
         compare(comboBox1.contentItem.selectedText, "Item 10")
@@ -2170,5 +2170,24 @@ TestCase {
         control.contentItem.font.pixelSize *= 2
         control.font.pixelSize *= 2
         compare(Math.ceil(control.implicitContentWidth), Math.ceil(oldTextFieldImplicitWidth))
+    }
+
+    // QTBUG-61021: text line should not be focused by default
+    // It causes (e.g. on Android) showing virtual keyboard when it is not needed
+    function test_doNotFocusTextLineByDefault() {
+        var control = createTemporaryObject(comboBox, testCase)
+        // Focus not set after creating combobox
+        verify(!control.activeFocus)
+        verify(!control.contentItem.focus)
+
+        // After setting focus on combobox, text line should not be focused
+        control.forceActiveFocus()
+        verify(control.activeFocus)
+        verify(!control.contentItem.focus)
+
+        // Text line is focused after intentional setting focus on it
+        control.contentItem.forceActiveFocus()
+        verify(control.activeFocus)
+        verify(control.contentItem.focus)
     }
 }
