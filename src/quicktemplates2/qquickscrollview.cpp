@@ -38,6 +38,7 @@
 #include "qquickpane_p_p.h"
 #include "qquickscrollbar_p_p.h"
 
+#include <QtQml/qqmlinfo.h>
 #include <QtQuick/private/qquickflickable_p.h>
 
 QT_BEGIN_NAMESPACE
@@ -575,7 +576,10 @@ void QQuickScrollView::contentItemChange(QQuickItem *newItem, QQuickItem *oldIte
         // assume/require that it has an explicit content size assigned.
         d->flickableHasExplicitContentWidth = true;
         d->flickableHasExplicitContentHeight = true;
-        d->setFlickable(qobject_cast<QQuickFlickable *>(newItem), false);
+        auto newItemAsFlickable = qobject_cast<QQuickFlickable *>(newItem);
+        if (newItem && !newItemAsFlickable)
+            qmlWarning(this) << "ScrollView only supports Flickable types as its contentItem";
+        d->setFlickable(newItemAsFlickable, false);
     }
     QQuickPane::contentItemChange(newItem, oldItem);
 }
