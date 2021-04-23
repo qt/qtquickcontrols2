@@ -869,6 +869,9 @@ class QQuickFriendlyFlickable : public QQuickFlickable
 
 void QQuickScrollBarAttachedPrivate::scrollHorizontal()
 {
+    if (!flickable)
+        return;
+
     QQuickFriendlyFlickable *f = reinterpret_cast<QQuickFriendlyFlickable *>(flickable);
 
     const qreal viewwidth = f->width();
@@ -881,6 +884,9 @@ void QQuickScrollBarAttachedPrivate::scrollHorizontal()
 
 void QQuickScrollBarAttachedPrivate::scrollVertical()
 {
+    if (!flickable)
+        return;
+
     QQuickFriendlyFlickable *f = reinterpret_cast<QQuickFriendlyFlickable *>(flickable);
 
     const qreal viewheight = f->height();
