@@ -75,6 +75,11 @@ TestCase {
         SignalSpy { }
     }
 
+    Component {
+        id: itemComponent
+        Item {}
+    }
+
     QtObject {
         id: object
     }
@@ -218,8 +223,8 @@ TestCase {
     }
 
     function test_warning() {
-        ignoreWarning(Qt.resolvedUrl("tst_tooltip.qml") + ":78:5: QML QtObject: ToolTip must be attached to an Item")
-        ignoreWarning("<Unknown File>:1:30: QML ToolTip: cannot find any window to open popup in.")
+        ignoreWarning(new RegExp(".*QML QtObject: ToolTip must be attached to an Item"))
+        ignoreWarning(new RegExp(".*QML ToolTip: cannot find any window to open popup in."))
         object.ToolTip.show("") // don't crash (QTBUG-56243)
     }
 
@@ -473,5 +478,18 @@ TestCase {
         tryCompare(item.ToolTip.toolTip, "opened", true)
         compare(item.ToolTip.toolTip.contentItem.wrapMode, Text.Wrap)
         verify(item.ToolTip.toolTip.contentItem.width < item.ToolTip.toolTip.contentItem.implicitWidth)
+    }
+
+    // QTBUG-83630: Test that newlines are accounted for in the implicit contentWidth.
+    function test_newLines() {
+        var item = createTemporaryObject(itemComponent, testCase)
+        verify(item)
+
+        item.ToolTip.show("This is one line of text\nThis is another line of text")
+
+        // The implicitWidth of the Text item for the text above will be larger than
+        // its contentWidth. ToolTip's implicitWidth uses contentWidth in its calculation,
+        // so we check that it's less than the Text's implicitWidth.
+        verify(item.ToolTip.toolTip.implicitWidth < item.ToolTip.toolTip.contentItem.implicitWidth)
     }
 }
