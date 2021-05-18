@@ -296,8 +296,8 @@ QQuickItem *QQuickMenuPrivate::beginCreateItem()
     QQuickItem *item = qobject_cast<QQuickItem *>(object);
     if (!item)
         delete object;
-
-    QQml_setParent_noEvent(item, q);
+    else
+        QQml_setParent_noEvent(item, q);
 
     return item;
 }
