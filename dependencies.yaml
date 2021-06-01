@@ -1,7 +1,7 @@
 dependencies:
   ../qtdeclarative:
-    ref: 159b2944c43da57c829ef74bac7788d72d6f4ff4
+    ref: 5bb3b4ee3ae448b103df9320a6bd316759cb5517
     required: true
   ../qtimageformats:
-    ref: c4e2cdc7becae3e4db511a83a889c62c1d7d092e
+    ref: 0a402660747df57cd74f010a0462ff6dff3bef7c
     required: false
