@@ -96,7 +96,7 @@ Q_LOGGING_CATEGORY(lcFileDialog, "qt.quick.dialogs.filedialog")
 
     \include includes/fallback.qdocinc
 
-    \sa FolderDialog, StandardPaths
+    //! \sa FolderDialog, StandardPaths
 */
 
 Q_DECLARE_LOGGING_CATEGORY(lcDialogs)
@@ -259,9 +259,12 @@ void QQuickFileDialog::setCurrentFiles(const QList<QUrl> &currentFiles)
     This property holds the folder where files are selected. It can be set to
     control the initial directory that is shown when the dialog is opened.
 
+//! TODO: Remove \omit once FolderDialog is available
+\omit
     For selecting a folder, use FolderDialog instead.
 
     \sa FolderDialog
+\endomit
 */
 QUrl QQuickFileDialog::currentFolder() const
 {
