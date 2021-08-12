@@ -1,2 +1,0 @@
-qt_commandline_subconfig(src/quickcontrols2)
-qt_commandline_subconfig(src/quicktemplates2)
