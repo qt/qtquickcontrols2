@@ -60,7 +60,6 @@ HEADERS += \
     $$PWD/qquickpopup_p_p.h \
     $$PWD/qquickpopupanchors_p.h \
     $$PWD/qquickpopupanchors_p_p.h \
-    $$PWD/qquickpopupitem_p.h \
     $$PWD/qquickpopupitem_p_p.h \
     $$PWD/qquickpopuppositioner_p_p.h \
     $$PWD/qquickpresshandler_p_p.h \
