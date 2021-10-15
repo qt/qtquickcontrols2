@@ -456,6 +456,9 @@ bool QQuickPopupPrivate::prepareEnterTransition()
         popupItem->setVisible(true);
         getPositioner()->setParentItem(parentItem);
         emit q->visibleChanged();
+
+        if (focus)
+            popupItem->setFocus(true);
     }
     return true;
 }
@@ -489,8 +492,6 @@ bool QQuickPopupPrivate::prepareExitTransition()
 void QQuickPopupPrivate::finalizeEnterTransition()
 {
     Q_Q(QQuickPopup);
-    if (focus)
-        popupItem->setFocus(true);
     transitionState = NoTransition;
     getPositioner()->reposition();
     emit q->openedChanged();
