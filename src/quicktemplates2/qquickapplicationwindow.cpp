@@ -653,6 +653,8 @@ QQuickOverlay *QQuickApplicationWindow::overlay() const
 
     if (!d->overlay) {
         d->overlay = new QQuickOverlay(QQuickWindow::contentItem());
+        // make the overlay discoverable by the virtual keyboard
+        d->q_ptr->setProperty("_q_QQuickOverlay", QVariant::fromValue<QQuickItem*>(d->overlay));
         d->overlay->stackAfter(QQuickApplicationWindow::contentItem());
     }
     return d->overlay;
