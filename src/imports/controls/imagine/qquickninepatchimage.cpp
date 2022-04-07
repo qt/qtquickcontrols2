@@ -386,7 +386,12 @@ void QQuickNinePatchImage::pixmapChange()
 {
     Q_D(QQuickNinePatchImage);
     if (QFileInfo(d->url.fileName()).completeSuffix().toLower() == QLatin1String("9.png")) {
-        d->resetNode = d->ninePatch.isNull();
+        // Keep resetNode if it is already set, we do not want to miss an
+        // ImageNode->NinePatchNode change.  Without this there's a chance one gets
+        // an incorrect cast on oldNode every once in a while with source changes.
+        if (!d->resetNode)
+            d->resetNode = d->ninePatch.isNull();
+
         d->ninePatch = d->pix.image();
         if (d->ninePatch.depth() != 32)
             d->ninePatch = d->ninePatch.convertToFormat(QImage::Format_ARGB32);
@@ -448,6 +453,13 @@ QSGNode *QQuickNinePatchImage::updatePaintNode(QSGNode *oldNode, UpdatePaintNode
 #ifdef QSG_RUNTIME_DESCRIPTION
     qsgnode_set_description(patchNode, QString::fromLatin1("QQuickNinePatchImage: '%1'").arg(d->url.toString()));
 #endif
+
+    // The image may wrap non-owned data (due to pixmapChange). Ensure we never
+    // pass such an image to the scenegraph, because with a separate render
+    // thread the data may become invalid (in a subsequent pixmapChange on the
+    // gui thread) by the time the renderer gets to do something with the QImage
+    // passed in here.
+    image.detach();
 
     QSGTexture *texture = window()->createTextureFromImage(image);
     patchNode->initialize(texture, sz * d->devicePixelRatio, image.size(), d->xDivs, d->yDivs, d->devicePixelRatio);
