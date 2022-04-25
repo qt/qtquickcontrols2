@@ -60,6 +60,7 @@ T.DialogButtonBox {
     delegate: Button { flat: true }
 
     contentItem: ListView {
+        implicitWidth: contentWidth
         model: control.contentModel
         spacing: control.spacing
         orientation: ListView.Horizontal
