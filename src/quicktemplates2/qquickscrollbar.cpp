@@ -827,6 +827,16 @@ void QQuickScrollBarAttachedPrivate::cleanupHorizontal()
 {
     Q_ASSERT(flickable && horizontal);
 
+    QQuickControlPrivate::hideOldItem(horizontal);
+    // ScrollBar.qml has a binding to visible and ScrollView.qml has a binding to parent.
+    // If we just set visible to false and parent to null, these bindings will overwrite
+    // them upon component completion as part of the binding evaluation.
+    // That's why we remove the binding completely.
+    const QQmlProperty visibleProperty(horizontal, QStringLiteral("visible"));
+    const QQmlProperty parentProperty(horizontal, QStringLiteral("parent"));
+    QQmlPropertyPrivate::removeBinding(visibleProperty);
+    QQmlPropertyPrivate::removeBinding(parentProperty);
+
     disconnect(flickable, &QQuickFlickable::movingHorizontallyChanged, this, &QQuickScrollBarAttachedPrivate::activateHorizontal);
 
     // TODO: export QQuickFlickableVisibleArea
@@ -838,6 +848,12 @@ void QQuickScrollBarAttachedPrivate::cleanupHorizontal()
 void QQuickScrollBarAttachedPrivate::cleanupVertical()
 {
     Q_ASSERT(flickable && vertical);
+
+    QQuickControlPrivate::hideOldItem(vertical);
+    const QQmlProperty visibleProperty(vertical, QStringLiteral("visible"));
+    const QQmlProperty parentProperty(vertical, QStringLiteral("parent"));
+    QQmlPropertyPrivate::removeBinding(visibleProperty);
+    QQmlPropertyPrivate::removeBinding(parentProperty);
 
     disconnect(flickable, &QQuickFlickable::movingVerticallyChanged, this, &QQuickScrollBarAttachedPrivate::activateVertical);
 
@@ -869,6 +885,9 @@ class QQuickFriendlyFlickable : public QQuickFlickable
 
 void QQuickScrollBarAttachedPrivate::scrollHorizontal()
 {
+    if (!flickable)
+        return;
+
     QQuickFriendlyFlickable *f = reinterpret_cast<QQuickFriendlyFlickable *>(flickable);
 
     const qreal viewwidth = f->width();
@@ -881,6 +900,9 @@ void QQuickScrollBarAttachedPrivate::scrollHorizontal()
 
 void QQuickScrollBarAttachedPrivate::scrollVertical()
 {
+    if (!flickable)
+        return;
+
     QQuickFriendlyFlickable *f = reinterpret_cast<QQuickFriendlyFlickable *>(flickable);
 
     const qreal viewheight = f->height();

@@ -48,67 +48,39 @@
 // We mean it.
 //
 
-#include <QtQuickTemplates2/private/qquickpage_p.h>
+#include <QtQuickTemplates2/private/qquickpopupitem_p.h>
+#include <QtQuickTemplates2/private/qquickpalette_p.h>
 
 QT_BEGIN_NAMESPACE
 
 class QQuickPopup;
-class QQuickPopupItemPrivate;
-class QQuickPopupItem : public QQuickPage
+
+class QQuickPopupItemPrivate : public QQuickPagePrivate
 {
-    Q_OBJECT
+    Q_DECLARE_PUBLIC(QQuickPopupItem)
 
 public:
-    explicit QQuickPopupItem(QQuickPopup *popup);
+    QQuickPopupItemPrivate(QQuickPopup *popup);
 
-    void grabShortcut();
-    void ungrabShortcut();
+    void init();
 
-protected:
-    void updatePolish() override;
+    void implicitWidthChanged() override;
+    void implicitHeightChanged() override;
 
-    bool event(QEvent *event) override;
-    bool childMouseEventFilter(QQuickItem *child, QEvent *event) override;
-    void focusInEvent(QFocusEvent *event) override;
-    void focusOutEvent(QFocusEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
-    void mouseDoubleClickEvent(QMouseEvent *event) override;
-    void mouseUngrabEvent() override;
-#if QT_CONFIG(quicktemplates2_multitouch)
-    void touchEvent(QTouchEvent *event) override;
-    void touchUngrabEvent() override;
-#endif
-#if QT_CONFIG(wheelevent)
-    void wheelEvent(QWheelEvent *event) override;
-#endif
+    void resolveFont() override;
+    void resolvePalette() override;
 
-    void contentItemChange(QQuickItem *newItem, QQuickItem *oldItem) override;
-    void contentSizeChange(const QSizeF &newSize, const QSizeF &oldSize) override;
-    void fontChange(const QFont &newFont, const QFont &oldFont) override;
-    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
-    void localeChange(const QLocale &newLocale, const QLocale &oldLocale) override;
-    void mirrorChange() override;
-    void itemChange(ItemChange change, const ItemChangeData &data) override;
-    void paddingChange(const QMarginsF &newPadding, const QMarginsF &oldPadding) override;
-    void paletteChange(const QPalette &newPalette, const QPalette &oldPalette) override;
-    void enabledChange() override;
+    QQuickItem *getContentItem() override;
 
-    QFont defaultFont() const override;
-    QPalette defaultPalette() const override;
+    void cancelContentItem() override;
+    void executeContentItem(bool complete = false) override;
 
-#if QT_CONFIG(accessibility)
-    QAccessible::Role accessibleRole() const override;
-    void accessibilityActiveChanged(bool active) override;
-#endif
+    void cancelBackground() override;
+    void executeBackground(bool complete = false) override;
 
-private:
-    Q_DISABLE_COPY(QQuickPopupItem)
-    Q_DECLARE_PRIVATE(QQuickPopupItem)
-    friend class QQuickPopup;
+    int backId = 0;
+    int escapeId = 0;
+    QQuickPopup *popup = nullptr;
 };
 
 QT_END_NAMESPACE

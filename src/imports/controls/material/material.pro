@@ -1,4 +1,4 @@
-TARGET = qtquickcontrols2materialstyleplugin
+TARGET = qqc2materialstyleplugin
 TARGETPATH = QtQuick/Controls.2/Material
 
 IMPORT_NAME = QtQuick.Controls.Material
