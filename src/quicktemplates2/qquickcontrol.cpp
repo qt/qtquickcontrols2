@@ -177,12 +177,19 @@ bool QQuickControlPrivate::acceptTouch(const QTouchEvent::TouchPoint &point)
         return true;
     }
 
-    // If the control is on a Flickable that has a pressDelay, then the press is never
-    // sent as a touch event, therefore we need to check for this case.
-    if (touchId == -1 && pressWasTouch && point.state() == Qt::TouchPointReleased) {
+    // If the control is on a Flickable that has a pressDelay, the press is sent
+    // as a mouse event rather than touch; so it detect and deal with it.
+    if (touchId == -1 && pressWasTouch) {
         const auto delta = QVector2D(point.pos() - previousPressPos);
-        if (!QQuickWindowPrivate::dragOverThreshold(delta))
+        const bool overThreshold = QQuickWindowPrivate::dragOverThreshold(delta);
+        if (point.state() == Qt::TouchPointReleased && !overThreshold) {
+            // touchpoint was released near the press position: don't expect any more events, but just handle the release
             return true;
+        } else if (point.state() == Qt::TouchPointMoved && overThreshold) {
+            // touchpoint was dragged over the drag threshold: accept it, and remember to handle all moves from now on
+            touchId = point.id();
+            return true;
+        }
     }
     return false;
 }
