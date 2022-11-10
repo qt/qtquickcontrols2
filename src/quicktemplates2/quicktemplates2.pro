@@ -14,5 +14,7 @@ SOURCES += \
     $$PWD/qtquicktemplates2global.cpp
 
 include(quicktemplates2.pri)
-include(accessible/accessible.pri)
+qtConfig(accessibility) {
+    include(accessible/accessible.pri)
+}
 load(qt_module)

@@ -456,6 +456,9 @@ bool QQuickPopupPrivate::prepareEnterTransition()
         popupItem->setVisible(true);
         getPositioner()->setParentItem(parentItem);
         emit q->visibleChanged();
+
+        if (focus)
+            popupItem->setFocus(true);
     }
     return true;
 }
@@ -489,8 +492,6 @@ bool QQuickPopupPrivate::prepareExitTransition()
 void QQuickPopupPrivate::finalizeEnterTransition()
 {
     Q_Q(QQuickPopup);
-    if (focus)
-        popupItem->setFocus(true);
     transitionState = NoTransition;
     getPositioner()->reposition();
     emit q->openedChanged();
@@ -513,13 +514,14 @@ void QQuickPopupPrivate::finalizeExitTransition()
         if (QQuickOverlay *overlay = QQuickOverlay::overlay(window)) {
             const auto stackingOrderPopups = QQuickOverlayPrivate::get(overlay)->stackingOrderPopups();
             for (auto popup : stackingOrderPopups) {
-                if (QQuickPopupPrivate::get(popup)->transitionState != ExitTransition) {
+                if (QQuickPopupPrivate::get(popup)->transitionState != ExitTransition
+                         && popup->hasFocus()) {
                     nextFocusPopup = popup;
                     break;
                 }
             }
         }
-        if (nextFocusPopup && nextFocusPopup->hasFocus()) {
+        if (nextFocusPopup) {
             nextFocusPopup->forceActiveFocus();
         } else {
             QQuickApplicationWindow *applicationWindow = qobject_cast<QQuickApplicationWindow*>(window);

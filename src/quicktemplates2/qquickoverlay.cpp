@@ -471,22 +471,27 @@ bool QQuickOverlay::childMouseEventFilter(QQuickItem *item, QEvent *event)
         // background dimming OR over another popup underneath, in case the popup
         // does not have background dimming.
         if (item == p->dimmer || !p->popupItem->isAncestorOf(item)) {
+            bool handled = false;
             switch (event->type()) {
 #if QT_CONFIG(quicktemplates2_multitouch)
             case QEvent::TouchBegin:
             case QEvent::TouchUpdate:
             case QEvent::TouchEnd:
-                return d->handleTouchEvent(item, static_cast<QTouchEvent *>(event), popup);
+                handled = d->handleTouchEvent(item, static_cast<QTouchEvent *>(event), popup);
+                break;
 #endif
 
             case QEvent::MouseButtonPress:
             case QEvent::MouseMove:
             case QEvent::MouseButtonRelease:
-                return d->handleMouseEvent(item, static_cast<QMouseEvent *>(event), popup);
+                handled = d->handleMouseEvent(item, static_cast<QMouseEvent *>(event), popup);
+                break;
 
             default:
                 break;
             }
+            if (handled)
+                return true;
         }
     }
     return false;
