@@ -215,8 +215,20 @@ bool QQuickAbstractButtonPrivate::acceptKeyClick(Qt::Key key) const
 bool QQuickAbstractButtonPrivate::isPressAndHoldConnected()
 {
     Q_Q(QQuickAbstractButton);
-    const auto signal = &QQuickAbstractButton::pressAndHold;
-    const QMetaMethod method = QMetaMethod::fromSignal(signal);
+    static const QMetaMethod method = [&]() {
+        const auto signal = &QQuickAbstractButton::pressAndHold;
+        return QMetaMethod::fromSignal(signal);
+    }();
+    return q->isSignalConnected(method);
+}
+
+bool QQuickAbstractButtonPrivate::isDoubleClickConnected()
+{
+    Q_Q(QQuickAbstractButton);
+    static const QMetaMethod method = [&]() {
+        const auto signal = &QQuickAbstractButton::doubleClicked;
+        return QMetaMethod::fromSignal(signal);
+    }();
     return q->isSignalConnected(method);
 }
 
@@ -385,6 +397,17 @@ void QQuickAbstractButtonPrivate::itemImplicitHeightChanged(QQuickItem *item)
     QQuickControlPrivate::itemImplicitHeightChanged(item);
     if (item == indicator)
         emit q->implicitIndicatorHeightChanged();
+}
+
+void QQuickAbstractButtonPrivate::itemDestroyed(QQuickItem *item)
+{
+    Q_Q(QQuickAbstractButton);
+    QQuickControlPrivate::itemDestroyed(item);
+    if (item == indicator) {
+        indicator = nullptr;
+        emit q->implicitIndicatorWidthChanged();
+        emit q->implicitIndicatorHeightChanged();
+    }
 }
 
 QQuickAbstractButton *QQuickAbstractButtonPrivate::findCheckedButton() const
@@ -1086,9 +1109,11 @@ void QQuickAbstractButton::mousePressEvent(QMouseEvent *event)
 void QQuickAbstractButton::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_D(QQuickAbstractButton);
-    QQuickControl::mouseDoubleClickEvent(event);
-    emit doubleClicked();
-    d->wasDoubleClick = true;
+    if (d->isDoubleClickConnected()) {
+        QQuickControl::mouseDoubleClickEvent(event);
+        emit doubleClicked();
+        d->wasDoubleClick = true;
+    }
 }
 
 void QQuickAbstractButton::timerEvent(QTimerEvent *event)
