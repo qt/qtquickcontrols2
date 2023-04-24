@@ -153,4 +153,60 @@ TestCase {
         // Shouldn't result in a crash.
         afterRenderingSpy.wait(1000)
     }
+
+    Component {
+        id: invalidNinePatchImageProvider
+        Item {
+            width: 200
+            height: 200
+            property alias ninePatchImage: np
+
+            NinePatchImage {
+                id: np
+                source : "qrc:/test-assets/button-background-1.png"
+                cache: false
+                visible: false
+            }
+            ShaderEffect {
+                width: 300
+                height: 300
+                property variant src: np
+                vertexShader: "
+                           uniform highp mat4 qt_Matrix;
+                           attribute highp vec4 qt_Vertex;
+                           attribute highp vec2 qt_MultiTexCoord0;
+                           varying highp vec2 coord;
+                           void main() {
+                               coord = qt_MultiTexCoord0;
+                               gl_Position = qt_Matrix * qt_Vertex;
+                           }"
+                fragmentShader: "
+                           varying highp vec2 coord;
+                           uniform sampler2D src;
+                           uniform lowp float qt_Opacity;
+                           void main() {
+                               lowp vec4 tex = texture2D(src, coord);
+                               gl_FragColor = vec4(vec3(dot(tex.rgb,
+                                                   vec3(0.344, 0.5, 0.156))),
+                                                        tex.a) * qt_Opacity;
+                           }"
+            }
+        }
+    }
+
+    function test_invalidNinePatchImageProvide() {
+        var container = createTemporaryObject(invalidNinePatchImageProvider, testCase)
+        verify(container);
+
+        var afterRenderingSpy = signalSpyComponent.createObject(null,
+            { target: testCase.Window.window, signalName: "afterRendering" })
+        verify(afterRenderingSpy.valid)
+
+        afterRenderingSpy.wait(100)
+        container.ninePatchImage.source = ""
+        testCase.Window.window.update()
+        // Shouldn't result in a crash.
+        wait(10)
+        afterRenderingSpy.wait(100)
+    }
 }

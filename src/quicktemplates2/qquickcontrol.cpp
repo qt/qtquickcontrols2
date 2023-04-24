@@ -179,9 +179,10 @@ bool QQuickControlPrivate::acceptTouch(const QTouchEvent::TouchPoint &point)
 
     // If the control is on a Flickable that has a pressDelay, then the press is never
     // sent as a touch event, therefore we need to check for this case.
-    if (touchId == -1 && pressWasTouch && point.state() == Qt::TouchPointReleased &&
-        point.pos() == previousPressPos) {
-        return true;
+    if (touchId == -1 && pressWasTouch && point.state() == Qt::TouchPointReleased) {
+        const auto delta = QVector2D(point.pos() - previousPressPos);
+        if (!QQuickWindowPrivate::dragOverThreshold(delta))
+            return true;
     }
     return false;
 }
