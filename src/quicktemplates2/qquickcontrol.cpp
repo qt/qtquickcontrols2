@@ -177,12 +177,19 @@ bool QQuickControlPrivate::acceptTouch(const QTouchEvent::TouchPoint &point)
         return true;
     }
 
-    // If the control is on a Flickable that has a pressDelay, then the press is never
-    // sent as a touch event, therefore we need to check for this case.
-    if (touchId == -1 && pressWasTouch && point.state() == Qt::TouchPointReleased) {
+    // If the control is on a Flickable that has a pressDelay, the press is sent
+    // as a mouse event rather than touch; so it detect and deal with it.
+    if (touchId == -1 && pressWasTouch) {
         const auto delta = QVector2D(point.pos() - previousPressPos);
-        if (!QQuickWindowPrivate::dragOverThreshold(delta))
+        const bool overThreshold = QQuickWindowPrivate::dragOverThreshold(delta);
+        if (point.state() == Qt::TouchPointReleased && !overThreshold) {
+            // touchpoint was released near the press position: don't expect any more events, but just handle the release
             return true;
+        } else if (point.state() == Qt::TouchPointMoved && overThreshold) {
+            // touchpoint was dragged over the drag threshold: accept it, and remember to handle all moves from now on
+            touchId = point.id();
+            return true;
+        }
     }
     return false;
 }
@@ -846,6 +853,13 @@ void QQuickControlPrivate::executeBackground(bool complete)
         quickCompleteDeferred(q, backgroundName(), background);
 }
 
+/*
+    \internal
+
+    Hides an item that was replaced by a newer one, rather than
+    deleting it, as the item is typically created in QML and hence
+    we don't own it.
+*/
 void QQuickControlPrivate::hideOldItem(QQuickItem *item)
 {
     if (!item)
@@ -861,6 +875,29 @@ void QQuickControlPrivate::hideOldItem(QQuickItem *item)
     QQuickAccessibleAttached *accessible = accessibleAttached(item);
     if (accessible)
         accessible->setIgnored(true);
+#endif
+}
+
+/*
+    \internal
+
+    Named "unhide" because it's used for cases where an item
+    that was previously hidden by \l hideOldItem() wants to be
+    shown by a control again, such as a ScrollBar in ScrollView.
+*/
+void QQuickControlPrivate::unhideOldItem(QQuickControl *control, QQuickItem *item)
+{
+    Q_ASSERT(item);
+    qCDebug(lcItemManagement) << "unhiding old item" << item;
+
+    item->setVisible(true);
+    item->setParentItem(control);
+
+#if QT_CONFIG(accessibility)
+    // Add the item back in to the accessibility tree.
+    QQuickAccessibleAttached *accessible = accessibleAttached(item);
+    if (accessible)
+        accessible->setIgnored(false);
 #endif
 }
 

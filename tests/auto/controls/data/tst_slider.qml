@@ -923,4 +923,39 @@ TestCase {
 
         touch.release(0, control, x0 + data.dx2, y0 + data.dy2).commit()
     }
+
+    Component {
+        id: listViewWithPressDelayAndSliders
+        ListView {
+            width: 300
+            height: 500
+            model: 3
+            pressDelay: 150
+            delegate: Slider {
+                width: 300
+                height: 150
+            }
+        }
+    }
+
+    function test_listViewWithPressDelay() {
+        var listView = createTemporaryObject(listViewWithPressDelayAndSliders, testCase, { width: parent.width, height: parent.height })
+        verify(listView)
+        var control = listView.itemAtIndex(0)
+        verify(control)
+        var movedSpy = signalSpy.createObject(control, {target: control, signalName: "moved"})
+        verify(movedSpy.valid)
+
+        var touch = touchEvent(control)
+        var x0 = control.handle.x + control.handle.width * 0.5
+        var y0 = control.handle.y + control.handle.height * 0.5
+        touch.press(0, control, x0, y0).commit()
+        tryCompare(control, "pressed", true)
+        fuzzyCompare(control.value, 0, 0.01)
+
+        touch.move(0, control, x0 + 100, y0).commit()
+        tryVerify(function() { return (control.value > 0.3); }) // around 0.35, depending on style
+        tryVerify(function() { return (movedSpy.count > 0); }) // ideally == 1, but in Material and Fusion it's 2
+        touch.release(0)
+    }
 }
