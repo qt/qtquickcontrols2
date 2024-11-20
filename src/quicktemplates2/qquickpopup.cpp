@@ -48,6 +48,7 @@
 #include <QtQuick/qquickitem.h>
 #include <QtQuick/private/qquicktransition_p.h>
 #include <QtQuick/private/qquickitem_p.h>
+#include <QtQuick/private/qquickaccessibleattached_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -2720,6 +2721,19 @@ QPalette QQuickPopup::defaultPalette() const
 }
 
 #if QT_CONFIG(accessibility)
+QAccessible::Role QQuickPopup::effectiveAccessibleRole() const
+{
+    auto *attached = qmlAttachedPropertiesObject<QQuickAccessibleAttached>(this, false);
+
+    auto role = QAccessible::NoRole;
+    if (auto *accessibleAttached = qobject_cast<QQuickAccessibleAttached *>(attached))
+        role = accessibleAttached->role();
+    if (role == QAccessible::NoRole)
+        role = accessibleRole();
+
+    return role;
+}
+
 QAccessible::Role QQuickPopup::accessibleRole() const
 {
     return QAccessible::Dialog;
